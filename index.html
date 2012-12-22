@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>単語カード</title>
+<style>
+body {
+  background: #3f3f3f;
+}
+h1 {
+  font-size: 50px;
+  color: #717171;
+  text-shadow: 0 3px 3px #333;
+}
+#container {
+  width: 324px;
+  height: 104px;
+  -webkit-perspective: 1000;
+}
+.card {
+  width: 324px;
+  height: 104px;
+  border: 4px solid #3f3f3f;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transition: 0.5s;
+}
+.card:hover {
+  -webkit-transform: rotateY(180deg);
+}
+.face {
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+}
+.front {
+  z-index: 10;
+  width: 304px;
+  height: 84px;
+  padding: 10px;
+  background: #fff url('img/paper-d7.png');
+}
+.front:hover {
+  z-index: 0;
+}
+.back {
+  width: 304px;
+  height: 84px;
+  padding: 10px;
+  -webkit-transform: rotateY(180deg);
+  background: #fff url('img/paper-c2.png');
+}
+</style>
+<script type="text/javascript">
+var lc = (function (window, document) {
+  var that = {};
+
+  that.memos = function () {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://lmt.ruby.iijgio.com/memos.json");
+    xhr.send();
+    xhr.onload = function () {
+      var res = JSON.parse(this.responseText);
+      for(obj in res) {
+        var element = document.createElement('div');
+        element.className = "card"
+        element.innerHTML = '<div class="face front">' + res[obj].title + '</div><div class="face back">' + res[obj].note + '</div>'
+        document.getElementById('container').appendChild(element);
+      }
+    }
+    xhr.onerror = function (e) {
+      alert("error: " + this.statusText);
+    }
+  };
+
+  return that;
+})(window, document);
+lc.memos();
+</script>
+</head>
+<body>
+<h1>単語カード</h1>
+<div id="container">
+</div>
+</body>
+</html>
